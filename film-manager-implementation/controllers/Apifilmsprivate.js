@@ -11,7 +11,7 @@ module.exports.getPrivateFilms = function getPrivateFilms(req, res, next) {
   filmService.getPrivateFilmsTotal(req.user.id)
     .then(function (response) {
       numOfFilms = response;
-      if(numOfReviews == 0){
+      if(numOfFilms == 0){
          return utils.writeJson(res, {
               totalPages: 1,
               currentPage: 1,

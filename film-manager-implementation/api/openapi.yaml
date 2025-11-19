@@ -741,13 +741,17 @@ paths:
               "$ref": "#/components/schemas/User"
         required: true
       responses:
-        '204':
-          description: No Content
+        '200':
+          description: Successful operation
           headers:
             Set-Cookie:
               schema:
                 type: string
                 example: token=abcde12345; Path=/; HttpOnly
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
         '401':
           description: Unauthorized
           content: {}

@@ -11,7 +11,7 @@ module.exports.getPublicFilms = function getPublicFilms(req, res, next) {
   filmService.getPublicFilmsTotal()
     .then(function (response) {
       numOfFilms = response;
-      if(numOfReviews == 0){
+      if(numOfFilms == 0){
          return utils.writeJson(res, {
               totalPages: 1,
               currentPage: 1,

@@ -11,7 +11,7 @@ module.exports.getInvitedFilms = function getInvitedFilms(req, res, next) {
   filmService.getInvitedFilmsTotal(req.user.id)
     .then(function (response) {
       numOfFilms = response;
-      if (numOfReviews == 0) {
+      if (numOfFilms == 0) {
         return utils.writeJson(res, {
           totalPages: 1,
           currentPage: 1,
