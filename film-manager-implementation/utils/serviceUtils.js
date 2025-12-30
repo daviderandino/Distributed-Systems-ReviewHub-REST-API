@@ -56,7 +56,8 @@ exports.getReviewPagination = function (pageNo, filmId) {
 
 exports.createReview = function (row) {
     var completedReview = (row.completed === 1) ? true : false;
-    return new Review(row.fid, row.rid, completedReview, row.reviewDate, row.rating, row.review);
+    // Assumendo che il costruttore di Review sia stato aggiornato per accettare questi parametri in coda
+    return new Review(row.fid, row.rid, completedReview, row.reviewDate, row.rating, row.review, row.invitationStatus, row.expirationDate);
 }
 
 /**

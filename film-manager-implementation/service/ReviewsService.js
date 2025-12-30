@@ -47,8 +47,8 @@ exports.getFilmReviews = function (pageNo, filmId, options) {
         var limits = serviceUtils.getReviewPagination(pageNo, filmId); // Only returns limits if pageNo is present
         if (pageNo) {
             sql += " LIMIT ?,?";
-            params.push(limits[0]);
-            params.push(limits[1]);
+            params.push(limits[2]);
+            params.push(limits[3]);
         }
 
         db.all(sql, params, (err, rows) => {
