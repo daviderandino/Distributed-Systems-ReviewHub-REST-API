@@ -37,6 +37,16 @@
       "type": "string",
       "description": "a textual description of the review",
       "maxLength": 1000
+    },
+    "invitationStatus": {
+      "type": "string",
+      "enum": ["pending", "accepted", "cancelled", "expired"],
+      "description": "The status of the review invitation"
+    },
+    "expirationDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The expiration date for the invitation"
     }
   },
   "required": ["filmId", "reviewerId", "completed"],

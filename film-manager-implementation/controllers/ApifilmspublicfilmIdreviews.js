@@ -32,6 +32,8 @@ module.exports.getFilmReviews = function getFilmReviews(req, res, next) {
           options.invitationStatus = req.query.invitationStatus;
       }
 
+      var pageNo = req.query.pageNo || 1;
+
       reviewService.getFilmReviews(req.query.pageNo, req.params.filmId, options)
         .then(function (response) {
           if (req.query.pageNo == null) var pageNo = 1;
