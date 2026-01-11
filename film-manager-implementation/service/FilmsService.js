@@ -115,7 +115,7 @@ exports.getInvitedFilms = function (userId, pageNo, filterStatus) {
         FROM films f, reviews r, 
         (SELECT count(*) total_rows 
          FROM films f2, reviews r2 
-         WHERE f2.private=0 AND f2.id = r2.filmId AND r2.reviewerId = ? 
+         WHERE f2.id = r2.filmId AND r2.reviewerId = ? 
          AND ${baseLogicCount}
          `;
 
@@ -127,7 +127,7 @@ exports.getInvitedFilms = function (userId, pageNo, filterStatus) {
     }
     
     sql += `) c 
-        WHERE f.private = 0 AND f.id = r.filmId AND r.reviewerId = ? 
+        WHERE f.id = r.filmId AND r.reviewerId = ? 
         AND ${baseLogic}
     `;
 
@@ -159,7 +159,7 @@ exports.getInvitedFilms = function (userId, pageNo, filterStatus) {
  **/
 exports.getInvitedFilmsTotal = function (reviewerId, filterStatus) {
     return new Promise((resolve, reject) => {
-        var sqlNumOfFilms = "SELECT count(*) total FROM films f, reviews r WHERE  f.private = 0 AND f.id = r.filmId AND r.reviewerId = ? AND (r.invitationStatus = 'accepted' OR (r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR r.expirationDate > datetime('now'))))";
+        var sqlNumOfFilms = "SELECT count(*) total FROM films f, reviews r WHERE f.id = r.filmId AND r.reviewerId = ? AND (r.invitationStatus = 'accepted' OR (r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR r.expirationDate > datetime('now'))))";
         
         var params = [reviewerId];
         
