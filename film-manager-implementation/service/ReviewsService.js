@@ -8,73 +8,91 @@ const Review = require('../components/review');
  * Retrieve the list of all the reviews that have been issued/completed for a public film
  **/
 exports.getFilmReviews = function (pageNo, filmId, options) {
-  return new Promise((resolve, reject) => {
-    // Determine if the user is the owner to decide what to show
-    const checkOwnerSql = "SELECT owner FROM films WHERE id = ?";
-    db.all(checkOwnerSql, [filmId], (err, rows) => {
-        if (err) {
-            reject(err);
-            return;
-        }
-        if (rows.length === 0) {
-            reject("NO_FILMS");
-            return;
-        }
-        
-        const isOwner = (options && options.owner && options.owner === rows[0].owner);
-        if (!isOwner) {
-            reject("USER_NOT_OWNER");
-            return;
-        }
-        var sql = "SELECT r.filmId as fid, r.reviewerId as rid, completed, reviewDate, rating, review, invitationStatus, expirationDate, c.total_rows FROM reviews r, (SELECT count(*) total_rows FROM reviews l WHERE l.filmId = ? ";
-        
-        // Add filtering logic for total count
-        if (options && options.invitationStatus && isOwner) {
-             sql += " AND l.invitationStatus = ? ";
-        }
-        sql += ") c WHERE r.filmId = ? ";
-
-        // Add filtering logic for main query
-        var params = [filmId];
-        if (options && options.invitationStatus && isOwner) {
-            params.push(options.invitationStatus);
-        }
-        params.push(filmId);
-        
-        if (options && options.invitationStatus && isOwner) {
-            sql += " AND r.invitationStatus = ? ";
-            params.push(options.invitationStatus);
-        }
-
-        var limits = serviceUtils.getReviewPagination(pageNo, filmId); // Only returns limits if pageNo is present
-        if (pageNo) {
-            sql += " LIMIT ?,?";
-            params.push(limits[2]);
-            params.push(limits[3]);
-        }
-
-        db.all(sql, params, (err, rows) => {
+    return new Promise((resolve, reject) => {
+        const checkFilmSql = "SELECT owner FROM films WHERE id = ?";
+        db.all(checkFilmSql, [filmId], (err, rows) => {
             if (err) {
                 reject(err);
-            } else {
-                let reviews = rows.map((row) => {
-                    let review = serviceUtils.createReview(row);
-                    
-                    const now = new Date();
-                    const expDate = row.expirationDate ? new Date(row.expirationDate) : null;
-                    const isExpired = expDate && now > expDate;
-
-                    if (review.invitationStatus === 'pending' && isExpired) {
-                        review.invitationStatus = 'cancelled'; 
-                    }
-                    return review;
-            
-                }).filter(r => r !== null); // Rimozione elementi null
-                resolve(reviews);
+                return;
             }
+            if (rows.length === 0) {
+                reject("NO_FILMS");
+                return;
+            }
+
+            const filmOwner = rows[0].owner;
+            const isOwner = (options && options.owner && options.owner === filmOwner);
+
+            var sqlSelect = "SELECT r.filmId as fid, r.reviewerId as rid, completed, reviewDate, rating, review, invitationStatus, expirationDate, c.total_rows ";
+            var sqlFrom = "FROM reviews r, (SELECT count(*) total_rows FROM reviews l WHERE l.filmId = ? ";
+            var sqlWhere = ") c WHERE r.filmId = ? ";
+
+            var paramsCount = [filmId];
+            var paramsMain = [filmId];
+
+
+            if (!isOwner) {
+                const publicFilter = " AND completed = 1 ";
+                
+                sqlFrom += " AND l.completed = 1 ";
+                sqlWhere += " AND r.completed = 1 ";
+                
+            } else {
+                if (options && options.invitationStatus) {
+                    const status = options.invitationStatus;
+
+                    if (status === 'pending') {
+                        const pendingLogic = "invitationStatus = 'pending' AND (expirationDate IS NULL OR expirationDate > datetime('now'))";
+                        sqlFrom += " AND l." + pendingLogic;
+                        sqlWhere += " AND r." + pendingLogic;
+
+                    } else if (status === 'cancelled' || status === 'expired') {
+                        const cancelledLogic = "(invitationStatus = 'cancelled' OR (invitationStatus = 'pending' AND expirationDate <= datetime('now')))";
+                        sqlFrom += " AND l." + cancelledLogic;
+                        sqlWhere += " AND r." + cancelledLogic;
+
+                    } else {
+                        sqlFrom += " AND l.invitationStatus = ? ";
+                        sqlWhere += " AND r.invitationStatus = ? ";
+                        paramsCount.push(status);
+                        paramsMain.push(status);
+                    }
+                }
+            }
+
+            var fullSql = sqlSelect + sqlFrom + sqlWhere;
+            
+            var allParams = paramsCount.concat(paramsMain);
+
+            var limits = serviceUtils.getReviewPagination(pageNo, filmId);
+            if (pageNo) {
+                fullSql += " LIMIT ?,?";
+                allParams.push(limits[2]);
+                allParams.push(limits[3]);
+            }
+
+            db.all(fullSql, allParams, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let reviews = rows.map((row) => {
+                        let review = serviceUtils.createReview(row);
+                        const now = new Date();
+                        const expDate = row.expirationDate ? new Date(row.expirationDate) : null;
+                        const isExpired = expDate && now > expDate;
+
+                        if (review.invitationStatus === 'pending' && isExpired) {
+                            review.invitationStatus = 'cancelled';
+                        }
+                        return review;
+
+                    }).filter(r => r !== null);
+                    
+                    resolve(reviews);
+                }
+            });
         });
     });
-  });
 }
 
 /**
