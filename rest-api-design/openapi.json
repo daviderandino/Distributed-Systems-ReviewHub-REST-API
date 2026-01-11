@@ -640,7 +640,21 @@
                 "items": {
                   "$ref": "#/components/schemas/Review"
                 }
-              }
+              },
+              "example": [
+                {
+                  "reviewerId": 3,
+                  "filmId": 1,
+                  "invitationStatus": "pending",
+                  "expirationDate": "2026-01-25T18:00:00Z"
+                },
+                {
+                  "reviewerId": 5,
+                  "filmId": 1,
+                  "invitationStatus": "pending",
+                  "expirationDate": "2026-01-25T18:00:00Z"
+                }
+              ]
             }
           },
           "required": true
@@ -849,10 +863,6 @@
           },
           "404": {
             "description": "Not Found",
-            "content": {}
-          },
-          "409": {
-            "description": "Conflict",
             "content": {}
           },
           "500": {
@@ -1088,10 +1098,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {}
-          },
           "401": {
             "description": "Unauthorized",
             "content": {}
@@ -1105,7 +1111,7 @@
           "api/users/authenticator/current"
         ],
         "summary": "Logs the current user out",
-        "description": "Invalidates the current user session. Removes the authentication cookie if present.",
+        "description": "Invalidates the current user session.  \nRemoves the authentication cookie if present.",
         "operationId": "logoutUser",
         "responses": {
           "204": {
@@ -1116,8 +1122,7 @@
           }
         }
       }
-}
-
+    }
   },
   "components": {
     "schemas": {
@@ -1259,6 +1264,15 @@
             "description": "the reviews for the film"
           }
         },
+        "example": {
+          "id": 1,
+          "title": "Pulp Fiction",
+          "owner": 1,
+          "private": true,
+          "watchDate": "2025-12-10",
+          "rating": 9,
+          "favorite": true
+        },
         "required": [
           "title",
           "owner",
@@ -1347,6 +1361,15 @@
             "type": "string",
             "format": "uri"
           }
+        },
+        "example": {
+          "filmId": 1,
+          "reviewerId": 2,
+          "completed": false,
+          "invitationStatus": "pending",
+          "expirationDate": "2026-01-20T12:00:00Z",
+          "review": null,
+          "rating": null
         },
         "required": [
           "filmId",
