@@ -149,6 +149,9 @@ exports.issueFilmReview = function (invitations, owner) {
             const sql3 = 'INSERT INTO reviews(filmId, reviewerId, completed, invitationStatus, expirationDate) VALUES(?,?,0,?,?)';
             var finalResult = [];
             for (var i = 0; i < invitations.length; i++) {
+              if (invitations[i].reviewerId == owner){
+                reject("CANNOT_INVITE_SELF"); return;
+              }
               var singleResult;
               try {
                 // Default status is 'pending'
