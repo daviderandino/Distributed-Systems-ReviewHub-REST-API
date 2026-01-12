@@ -281,8 +281,8 @@ exports.updateSingleReview = function (review, filmId, reviewerId) {
              reject("INVALID_RATING");
              return; 
         }
-        var sql2 = 'UPDATE reviews SET completed = ?';
-        var parameters = [review.completed];
+        var sql2 = 'UPDATE reviews SET completed = ?, invitationStatus = ?';
+        var parameters = [review.completed, 'completed'];
         if (review.reviewDate != undefined) {
           sql2 = sql2.concat(', reviewDate = ?');
           parameters.push(review.reviewDate);
