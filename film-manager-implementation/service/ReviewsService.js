@@ -244,7 +244,7 @@ exports.getSingleReview = function (filmId, reviewerId) {
         const expDate = rows[0].expirationDate ? new Date(rows[0].expirationDate) : null;
         const isExpired = expDate && now > expDate;
         
-        if (rows[0].invitationStatus === 'cancelled' || (rows[0].invitationStatus === 'pending' && isExpired)) {
+        if (rows[0] === 'pending' || rows[0].invitationStatus === 'cancelled' || (rows[0].invitationStatus === 'pending' && isExpired)) {
              reject("NO_REVIEWS");
              return;
         }
