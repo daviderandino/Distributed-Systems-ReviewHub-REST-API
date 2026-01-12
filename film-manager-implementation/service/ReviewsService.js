@@ -277,6 +277,10 @@ exports.updateSingleReview = function (review, filmId, reviewerId) {
           reject("INVITATION_NOT_ACCEPTED");
       }
       else {
+        if (review.rating !== undefined && (review.rating < 1 || review.rating > 10)) {
+             reject("INVALID_RATING");
+             return; 
+        }
         var sql2 = 'UPDATE reviews SET completed = ?';
         var parameters = [review.completed];
         if (review.reviewDate != undefined) {
