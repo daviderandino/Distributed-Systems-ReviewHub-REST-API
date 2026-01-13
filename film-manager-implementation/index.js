@@ -55,6 +55,10 @@ if(req.isAuthenticated()) {
 var filmSchema = JSON.parse(fs.readFileSync(path.join('.', 'json_schemas', 'film_schema.json')).toString());
 var userSchema = JSON.parse(fs.readFileSync(path.join('.', 'json_schemas', 'user_schema.json')).toString());
 var reviewSchema = JSON.parse(fs.readFileSync(path.join('.', 'json_schemas', 'review_schema.json')).toString());
+var reviewListSchema = {
+    type: "array",
+    items: reviewSchema
+};
 var validator = new Validator({ allErrors: true });
 validator.ajv.addSchema([userSchema, filmSchema, reviewSchema]);
 const addFormats = require('ajv-formats').default;
@@ -103,10 +107,10 @@ app.put('/api/films/public/:filmId', isLoggedIn, validate({ body: filmSchema }),
 app.delete('/api/films/public/:filmId', isLoggedIn, apiFilmsPublicFilmId.deleteSinglePublicFilm);
 
 app.get('/api/films/public/:filmId/reviews', isLoggedIn, apiFilmsPublicFilmIdReviews.getFilmReviews);
-app.post('/api/films/public/:filmId/reviews', isLoggedIn, apiFilmsPublicFilmIdReviews.issueFilmReview);
+app.post('/api/films/public/:filmId/reviews', isLoggedIn, validate({ body: reviewListSchema }),apiFilmsPublicFilmIdReviews.issueFilmReview);
 
 app.get('/api/films/public/:filmId/reviews/:reviewerId', apiFilmsPublicFilmIdReviewsReviewerId.getSingleReview);
-app.put('/api/films/public/:filmId/reviews/:reviewerId', isLoggedIn, apiFilmsPublicFilmIdReviewsReviewerId.updateSingleReview);
+app.put('/api/films/public/:filmId/reviews/:reviewerId', isLoggedIn, validate({ body: reviewSchema }), apiFilmsPublicFilmIdReviewsReviewerId.updateSingleReview);
 app.delete('/api/films/public/:filmId/reviews/:reviewerId', isLoggedIn, apiFilmsPublicFilmIdReviewsReviewerId.deleteSingleReview);
 
 app.post('/api/films/public/assignments', isLoggedIn, apiFilmsPublicAssignments.assignReviewBalanced);
