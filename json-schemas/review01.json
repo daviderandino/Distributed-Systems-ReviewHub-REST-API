@@ -1,9 +1,11 @@
 {
-    "$schema": "./review_schema.json",
-    "filmId": 2,
-    "reviewerId": 3,
-    "completed": true,
-    "reviewDate": "2022-02-22",
-    "rating": 7,
-    "review": "Non molto interessante."
-  }
+  "$schema": "./review_schema.json",
+  "filmId": 2,
+  "reviewerId": 3,
+  "completed": true,
+  "reviewDate": "2022-02-22",
+  "rating": 7,
+  "review": "Nothing special.",
+  "invitationStatus": "accepted", 
+  "expirationDate": "2022-02-21T12:00:00Z"
+}

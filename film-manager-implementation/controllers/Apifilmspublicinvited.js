@@ -9,10 +9,8 @@ module.exports.getInvitedFilms = function getInvitedFilms(req, res, next) {
   var numOfFilms = 0;
   var next = 0;
   
-  // Recuperiamo il filtro dalla query string (es. ?invitationStatus=pending)
   var filterStatus = req.query.invitationStatus;
 
-  // Passiamo il filtro anche alla funzione che conta i film totali
   filmService.getInvitedFilmsTotal(req.user.id, filterStatus)
     .then(function (response) {
       numOfFilms = response;
@@ -25,7 +23,6 @@ module.exports.getInvitedFilms = function getInvitedFilms(req, res, next) {
         });
       }
       
-      // Passiamo il filtro alla funzione di ricerca
       filmService.getInvitedFilms(req.user.id, req.query.pageNo, filterStatus)
         .then(function (response) {
           if (req.query.pageNo == null) var pageNo = 1;
@@ -34,7 +31,6 @@ module.exports.getInvitedFilms = function getInvitedFilms(req, res, next) {
           var totalPage = Math.ceil(numOfFilms / constants.ELEMENTS_IN_PAGE);
           next = Number(pageNo) + 1;
           
-          // Costruzione del link per la pagina successiva mantenendo il filtro
           let nextLink = "/api/films/public/invited?pageNo=" + next;
           if(filterStatus) {
               nextLink += "&invitationStatus=" + filterStatus;

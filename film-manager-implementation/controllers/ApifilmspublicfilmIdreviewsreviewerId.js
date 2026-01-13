@@ -65,7 +65,6 @@ module.exports.updateSingleReview = function updateSingleReview (req, res, next)
         else if (response == "NO_REVIEWS"){
             utils.writeJson(res, { errors: [{ 'param': 'Server', 'msg': 'The review does not exist.' }], }, 404);
         }
-        // --- AGGIUNGI QUESTO ---
         else if (response == "INVALID_RATING") {
              utils.writeJson(res, { errors: [{ 'param': 'Server', 'msg': 'Rating must be between 1 and 10.' }], }, 400); // 400 Bad Request
         }

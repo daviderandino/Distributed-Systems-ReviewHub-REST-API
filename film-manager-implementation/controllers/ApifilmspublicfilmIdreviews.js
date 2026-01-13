@@ -6,7 +6,6 @@ const constants = require('../utils/constants.js');
 
 module.exports.getFilmReviews = function getFilmReviews(req, res, next) {
 
-  //retrieve a list of reviews
   var numOfReviews = 0;
   var next = 0;
 
@@ -23,7 +22,6 @@ module.exports.getFilmReviews = function getFilmReviews(req, res, next) {
             });
       }
       
-      // Pass owner ID (if available, e.g., optional auth) and query filters
       var options = {};
       if(req.user) {
           options.owner = req.user.id;
@@ -55,7 +53,7 @@ module.exports.getFilmReviews = function getFilmReviews(req, res, next) {
               currentPage: pageNo,
               totalItems: numOfReviews,
               reviews: response,
-              next: "/api/films/public/" + req.params.filmId + "/reviews?pageNo=" + next // Fixed taskId -> filmId
+              next: "/api/films/public/" + req.params.filmId + "/reviews?pageNo=" + next 
             });
           }
         })
