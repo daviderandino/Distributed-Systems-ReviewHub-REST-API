@@ -116,7 +116,7 @@ app.delete('/api/films/public/:filmId/reviews/:reviewerId', isLoggedIn, apiFilms
 app.post('/api/films/public/assignments', isLoggedIn, apiFilmsPublicAssignments.assignReviewBalanced);
 
 app.get('/api/users', isLoggedIn, apiUsers.getUsers);
-app.post('/api/users/authenticator', apiUsersAuthenticator.authenticateUser);
+app.post('/api/users/authenticator', validate({ body: userSchema }), apiUsersAuthenticator.authenticateUser);
 app.delete('/api/users/authenticator/current', isLoggedIn,  apiUsersAuthenticatorCurrent.logoutUser);
 app.get('/api/users/:userId', isLoggedIn, apiUsersUserId.getSingleUser);
 

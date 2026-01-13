@@ -50,7 +50,7 @@
       "description": "The expiration date/time for the invitation to be accepted"
     }
   },
-  "required": ["filmId", "reviewerId", "completed"],
+  "required": ["filmId", "reviewerId"],
   "dependencies": {
     "completed": {
       "oneOf": [
