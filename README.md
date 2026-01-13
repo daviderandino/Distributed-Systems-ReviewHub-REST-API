@@ -1,4 +1,8 @@
 # Project Structure
+
+### postman/
+
+Contains the Postman Collection, that can be used to test the APIs by following the instructions in the README below.
 ### json-schemas/
 
 Contains the JSON schemas used for data validation.
@@ -58,16 +62,14 @@ To meet the exam specifications while maintaining the architecture of Lab 1, the
 
 Instead of implementing a server-side timer or a cron job to update the database status to expired or cancelled, the system uses Lazy Evaluation.
 
-- Logic: The database retains the pending status and the expirationDate.
+- Logic: The database retains the pending status and the expirationDate. The "cancelled" state is a computed property, not a stored one.
 
-- Implementation: When data is requested (GET), the service compares expirationDate with the current server time (datetime('now')).
+- Implementation: When data is requested (GET), the service compares expirationDate with the current server time (datetime('now')). If now > expirationDate, the invitation is transformed and returned as cancelled (or expired) to the client on the fly.
 
-    - If now > expirationDate, the invitation is treated as cancelled/expired on the fly.
-
-    - Benefit: This approach makes the service stateless and lightweight, avoiding complex background process management while strictly satisfying the requirement that expired invitations "automatically become invisible" or cancelled.
+- Benefit: This approach makes the service stateless and lightweight, avoiding complex background process management while strictly satisfying the requirement that expired invitations "automatically become invisible" or cancelled from the user's perspective, ensuring data consistency without asynchronous jobs.
 
 ### 2. Review Lifecycle & State Machine
-The reviews table was extended with an invitationStatus column. The flow is enforced as follows:
+The reviews table is extended with an invitationStatus column. The flow is enforced as follows:
 
 - pending: Created by the owner. Visible to the invitee (if not expired).
 
@@ -77,19 +79,15 @@ The reviews table was extended with an invitationStatus column. The flow is enfo
 
 - cancelled (Virtual): A pending review where the expiration date has passed. Visible only to the owner as historic data.
 
-### 3. Visibility & Privacy Rules
-Strict filtering logic was applied at the SQL/Service level to satisfy the different actor perspectives:
+### 3. Atomic State Transitions
+- Critical state changes, specifically the "Accept All" operation, are implemented as single atomic SQL UPDATE statements rather than Read-Modify-Write sequences.
 
-- Public/Anonymouse Users: Can only see reviews with completed: true.
+- Detail: The query updates only rows that are currently pending AND valid (not expired), checking the condition again at the exact moment of writing.
 
-- Invitees: Can see their own pending invitations only if they are not expired.
-
-- Owners: Have full visibility. They can see pending, accepted, completed, and explicitly query for cancelled (expired) invitations to track user activity.
-
-- Private Films: Invitations are strictly blocked for private films (private: 1). The system enforces the rule that private films are personal diaries and cannot be shared.
+- Benefit: This prevents race conditions where a user might accidentally accept an invitation the exact moment it expires, maintaining strict data integrity without requiring complex transaction locks.
 
 ### 4. Security & Data Integrity
-Several safeguards were implemented to prevent logic abuse:
+Several safeguards are implemented to prevent logic abuse:
 
 - Anti-Spoofing: The API validates that the reviewerId in the URL matches the authenticated req.user.id during review updates. Users cannot complete reviews assigned to others.
 
@@ -98,11 +96,6 @@ Several safeguards were implemented to prevent logic abuse:
 - Review Locking: A user cannot submit a review (PUT) unless they have explicitly transitioned the state to accepted first.
 
 - Input Validation: Ratings are strictly validated to be integers between 1 and 10.
-
-### 5. API Design
-- Atomic "Accept All": A specific endpoint (PUT /api/films/public/invited) was created to handle the requirement of accepting all pending invitations in a "single operation".
-
-- Pagination: All new endpoints maintain the pagination standard of the existing project
 
 # Demonstration Flow & Test Scenarios
 
