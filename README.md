@@ -1,17 +1,14 @@
 # Project Structure
 
-### postman/
-
-Contains the Postman Collection, that can be used to test the APIs by following the instructions in the README below.
-### json-schemas/
+### JSON Schemas/
 
 Contains the JSON schemas used for data validation.
 
-### rest-api-design/
+### REST APIs Design/
 
-Contains the OpenAPI specification (openapi.yaml and openapi.json) describing the modified REST APIs.
+Contains the OpenAPI specification (openapi.yaml and openapi.json) describing the modified REST APIs and the Postman Collection, that can be used to test the APIs by following the instructions in the README below.
 
-### film-manager-implementation/
+### REST APIs Implementation/
 
 Contains the Node.js server implementation.
 
@@ -37,14 +34,14 @@ SQLite database files
 Navigate to the implementation folder:
 
 ```bash
-cd film-manager-implementation
+cd "REST APIs Implementation"
 npm install
 ```
 
 Start the server
 
 ```bash
-cd film-manager-implementation
+cd "REST APIs Implementation"
 node index.js
 ```
 
