@@ -187,7 +187,7 @@ The database provided with this project (database.db) is pre-populated to demons
 
 - Request: POST Login1 
 
-- Request: GET Reviews Check (No filters) 
+- Request: GET Check Review (No filters) 
 
     - Result: The owner sees the full history, including User4: (Cancelled/Expired) (Visible only to owner).
 
@@ -196,9 +196,9 @@ The database provided with this project (database.db) is pre-populated to demons
     - Result: Empty. User 2 is now completed, and User 4 is expired.
 
 ### Step 7: Privacy Verification
-- Actor: Any Invitee (User 2/3/4/5)
+- Actor: Any Invitee (User 2/3/4/5) or No-Auth Users
 
-- Request: GET  (No Auth) Check Review of a Film 
+- Request: GET Check Review of a Film 
 
 - Action: Try to view the general reviews list for Film 1.
 

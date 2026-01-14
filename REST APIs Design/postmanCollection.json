@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5079ff68-bf62-4d85-9494-55f230d07979",
+		"_postman_id": "8fa10341-11a2-4a7c-82b0-ccc9be7ee07a",
 		"name": "Collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "43057365"
@@ -212,7 +212,7 @@
 			"response": []
 		},
 		{
-			"name": "Reviews Check (owner can view all, others no)",
+			"name": "Check Review of a Film",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -384,29 +384,7 @@
 			"response": []
 		},
 		{
-			"name": "View pending invitations",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3001/api/films/public/invited",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"films",
-						"public",
-						"invited"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "(No Auth) Check Review of a Film, given a ReviewerID",
+			"name": "Check Review of a Film, given a ReviewerID",
 			"request": {
 				"method": "GET",
 				"header": [],
