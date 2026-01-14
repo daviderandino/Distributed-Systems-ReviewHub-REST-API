@@ -101,9 +101,6 @@ module.exports.issueFilmReview = function issueFilmReview(req, res, next) {
         else if (response == "EXISTING_REVIEW") {
           utils.writeJson(res, { errors: [{ 'param': 'Server', 'msg': 'The review already exist for this film and reviewer' }], }, 409);
         }
-        else if (response == "CANNOT_INVITE_SELF") {
-          utils.writeJson(res, { errors: [{ 'param': 'Server', 'msg': 'The owner cannot invite themselves to review the film.' }], }, 400);
-        }
         else {
           utils.writeJson(res, { errors: [{ 'param': 'Server', 'msg': response }], }, 500);
         }

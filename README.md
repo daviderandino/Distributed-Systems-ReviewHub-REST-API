@@ -88,8 +88,6 @@ Several safeguards are implemented to prevent logic abuse:
 
 - Anti-Spoofing: The API validates that the reviewerId in the URL matches the authenticated req.user.id during review updates. Users cannot complete reviews assigned to others.
 
-- Self-Invite Block: Owners are prevented from issuing review invitations to themselves (to avoid data duplication with the existing rating field in the films table).
-
 - Review Locking: A user cannot submit a review (PUT) unless they have explicitly transitioned the state to accepted first.
 
 - Input Validation: Ratings are strictly validated to be integers between 1 and 10.
