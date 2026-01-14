@@ -226,9 +226,10 @@ exports.deleteSingleReview = function (filmId, reviewerId, owner) {
 /**
  * Retrieve a review that has been issued/completed for a film
  **/
-exports.getSingleReview = function (filmId, reviewerId) {
+exports.getSingleReview = function (filmId, reviewerId, userId) {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT filmId as fid, reviewerId as rid, completed, reviewDate, rating, review, invitationStatus, expirationDate FROM reviews WHERE filmId = ? AND reviewerId = ?";
+    // owner
+    const sql = "SELECT r.filmId as fid, r.reviewerId as rid, r.completed, r.reviewDate, r.rating, r.review, r.invitationStatus, r.expirationDate, f.owner FROM reviews r JOIN films f ON r.filmId = f.id WHERE r.filmId = ? AND r.reviewerId = ?";
     db.all(sql, [filmId, reviewerId], (err, rows) => {
       if (err)
         reject(err);
@@ -238,13 +239,19 @@ exports.getSingleReview = function (filmId, reviewerId) {
         const now = new Date();
         const expDate = rows[0].expirationDate ? new Date(rows[0].expirationDate) : null;
         const isExpired = expDate && now > expDate;
-        
-        if (rows[0].invitationStatus === 'pending' || rows[0].invitationStatus === 'cancelled' || (rows[0].invitationStatus === 'pending' && isExpired)) {
-             reject("NO_REVIEWS");
+
+        if(rows[0].invitationStatus !== 'completed'){
+          reject("NO_REVIEWS");
              return;
         }
 
         var review = serviceUtils.createReview(rows[0]);
+
+        if (rows[0].owner !== userId) {
+            delete review.invitationStatus;
+            delete review.expirationDate;
+        }
+
         resolve(review);
       }
     });

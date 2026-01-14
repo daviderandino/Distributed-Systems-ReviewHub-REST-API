@@ -27,7 +27,9 @@ module.exports.deleteSingleReview = function deleteSingleReview (req, res, next)
 
 module.exports.getSingleReview = function getSingleReview (req, res, next) {
 
-    reviewService.getSingleReview(req.params.filmId, req.params.reviewerId)
+    const userId = req.user && req.user.id ? req.user.id : null;
+
+    reviewService.getSingleReview(req.params.filmId, req.params.reviewerId, userId)
         .then(function(response) {
             utils.writeJson(res, response);
         })
