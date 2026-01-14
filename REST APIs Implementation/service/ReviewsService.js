@@ -41,17 +41,15 @@ exports.getFilmReviews = function (pageNo, filmId, options) {
                 if (options && options.invitationStatus) {
                     const status = options.invitationStatus;
 
-                    if (status === 'pending') {
-                        const pendingLogic = "invitationStatus = 'pending' AND (expirationDate IS NULL OR expirationDate > datetime('now'))";
-                        sqlFrom += " AND l." + pendingLogic;
-                        sqlWhere += " AND r." + pendingLogic;
+                   if (status === 'pending') {
+                        sqlFrom += " AND l.invitationStatus = 'pending' AND (l.expirationDate IS NULL OR l.expirationDate > datetime('now'))";
+                        sqlWhere += " AND r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR r.expirationDate > datetime('now'))";
 
                     } else if (status === 'cancelled' || status === 'expired') {
-                        const cancelledLogic = "(invitationStatus = 'cancelled' OR (invitationStatus = 'pending' AND expirationDate <= datetime('now')))";
-                        sqlFrom += " AND l." + cancelledLogic;
-                        sqlWhere += " AND r." + cancelledLogic;
+                        sqlFrom += " AND (l.invitationStatus = 'cancelled' OR (l.invitationStatus = 'pending' AND l.expirationDate <= datetime('now')))";
+                        sqlWhere += " AND (r.invitationStatus = 'cancelled' OR (r.invitationStatus = 'pending' AND r.expirationDate <= datetime('now')))";
 
-                    } else {
+                    }else {
                         sqlFrom += " AND l.invitationStatus = ? ";
                         sqlWhere += " AND r.invitationStatus = ? ";
                         paramsCount.push(status);
