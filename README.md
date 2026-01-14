@@ -138,7 +138,7 @@ The database provided with this project (database.db) is pre-populated to demons
 
 - Action: Attempt to submit the review text and rating.
 
-    - Expected Result: Success. Since the invitation was already in the accepted state in the DB seed, the system allows the update immediately
+    - Expected Result: Success. Since the invitation was already in the accepted state in the DB seed, the system allows the update immediately. Works multiple time without another invite.
 
 ### Step 4: The "Standard Lifecycle" (Pending -> Accept -> Write)
 - Actor: User 2

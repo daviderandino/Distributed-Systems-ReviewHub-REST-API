@@ -273,7 +273,7 @@ exports.updateSingleReview = function (review, filmId, reviewerId) {
       else if (reviewerId != rows[0].reviewerId) {
         reject("USER_NOT_REVIEWER");
       }
-      else if (rows[0].invitationStatus !== 'accepted') {
+      else if (rows[0].invitationStatus !== 'accepted' && rows[0].invitationStatus !== 'completed') {
           reject("INVITATION_NOT_ACCEPTED");
       }
       else {
