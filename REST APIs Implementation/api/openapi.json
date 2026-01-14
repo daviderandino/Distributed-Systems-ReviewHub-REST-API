@@ -474,8 +474,8 @@
                       "watchDate": "2025-01-10",
                       "rating": 10,
                       "favorite": true,
-                      "self": "/api/films/public/2",
-                      "reviews": "/api/films/public/2/reviews"
+                      "expirationDate": "2030-01-30 12:00:00",
+                      "invitationStatus": "pending"
                     }
                   ]
                 }
