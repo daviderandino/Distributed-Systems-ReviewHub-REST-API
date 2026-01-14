@@ -125,9 +125,9 @@ The database provided with this project (database.db) is pre-populated to demons
 
 - Request: GET Owner Filter Pending 
 
-- Action: Retrieve reviews with ?invitationStatus=pending.
+- Action: Retrieve reviews with ?invitationStatus=pending or {accepted,completed,cancelled}.
 
-    - Expected Result: You must see User 2 (Active Pending). User 4 is not visibile because is a past invitation
+    - Expected Result: You must see User 2 (Active Pending), User 3 (Accepted) User 4 (cancelled), User 5 (completed)
 
 ### Step 3: The "Already Accepted" Scenario
 - Actor: User 3
