@@ -42,12 +42,11 @@ exports.getFilmReviews = function (pageNo, filmId, options) {
                     const status = options.invitationStatus;
 
                    if (status === 'pending') {
-                        sqlFrom += " AND l.invitationStatus = 'pending' AND (l.expirationDate IS NULL OR l.expirationDate > datetime('now'))";
-                        sqlWhere += " AND r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR r.expirationDate > datetime('now'))";
-
+                        sqlFrom += " AND l.invitationStatus = 'pending' AND (l.expirationDate IS NULL OR datetime(l.expirationDate) > datetime('now'))";
+                        sqlWhere += " AND r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR datetime(r.expirationDate) > datetime('now'))";
                     } else if (status === 'cancelled' || status === 'expired') {
-                        sqlFrom += " AND (l.invitationStatus = 'cancelled' OR (l.invitationStatus = 'pending' AND l.expirationDate <= datetime('now')))";
-                        sqlWhere += " AND (r.invitationStatus = 'cancelled' OR (r.invitationStatus = 'pending' AND r.expirationDate <= datetime('now')))";
+                        sqlFrom += " AND (l.invitationStatus = 'cancelled' OR (l.invitationStatus = 'pending' AND datetime(l.expirationDate) <= datetime('now')))";
+                        sqlWhere += " AND (r.invitationStatus = 'cancelled' OR (r.invitationStatus = 'pending' AND datetime(r.expirationDate) <= datetime('now')))";
 
                     }else {
                         sqlFrom += " AND l.invitationStatus = ? ";

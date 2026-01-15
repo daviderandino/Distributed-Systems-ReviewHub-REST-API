@@ -107,8 +107,8 @@ exports.getPublicFilmsTotal = function () {
 exports.getInvitedFilms = function (userId, pageNo, filterStatus) {
   return new Promise((resolve, reject) => {
     
-    var baseLogic = `(r.invitationStatus = 'accepted' OR (r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR r.expirationDate > datetime('now'))))`;
-    var baseLogicCount = `(r2.invitationStatus = 'accepted' OR (r2.invitationStatus = 'pending' AND (r2.expirationDate IS NULL OR r2.expirationDate > datetime('now'))))`;
+    var baseLogic = `(r.invitationStatus = 'accepted' OR (r.invitationStatus = 'pending' AND (r.expirationDate IS NULL OR datetime(r.expirationDate) > datetime('now'))))`;
+    var baseLogicCount = `(r2.invitationStatus = 'accepted' OR (r2.invitationStatus = 'pending' AND (r2.expirationDate IS NULL OR datetime(r2.expirationDate) > datetime('now'))))`;
 
     var sql = `
         SELECT f.id as fid, f.title, f.owner, f.private, f.watchDate, f.rating, f.favorite, r.expirationDate, r.invitationStatus, c.total_rows 
