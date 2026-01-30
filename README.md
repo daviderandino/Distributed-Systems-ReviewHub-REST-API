@@ -2,13 +2,13 @@
 This API was developed using a contract-first approach, leveraging an OpenAPI specification to ensure strict alignment between design and implementation.
 
 ### Core Technologies
-Backend Runtime: Node.js.
+- Backend Runtime: Node.js.
 
-Web Framework: Express.js for efficient routing and middleware management.
+- Web Framework: Express.js for efficient routing and middleware management.
 
-Database: SQLite for a lightweight, serverless data persistence layer.
+- Database: SQLite for a lightweight, serverless data persistence layer.
 
-API Documentation: Swagger/OpenAPI 3.0, accessible via the /docs endpoint for interactive testing.
+- API Documentation: Swagger/OpenAPI 3.0, accessible via the /docs endpoint for interactive testing.
 
 # Project Structure
 
